@@ -6,8 +6,11 @@
     "ng": "ng",
     "setup": "git submodule init && git submodule update && bun install",
     "start": "ng serve",
+    "start:react": "vite --config vite.react.config.ts",
     "build": "ng build",
+    "build:react": "vite build --config vite.react.config.ts",
     "test": "vitest",
+    "test:react": "vitest --config vitest.react.config.ts",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "test:e2e": "playwright test --grep-invert @security",
@@ -17,8 +20,8 @@
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
     "test:e2e:disabled": "cat e2e/DISABLED_TESTS.md",
-    "format": "prettier --write \"**/*.{ts,html,css,json,md}\" \"!realworld/**\"",
-    "format:check": "prettier --check \"**/*.{ts,html,css,json,md}\" \"!realworld/**\"",
+    "format": "prettier --write \"**/*.{ts,tsx,html,css,json,md}\" \"!realworld/**\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,html,css,json,md}\" \"!realworld/**\"",
     "prepare": "husky install"
   },
   "engines": {
@@ -36,7 +39,11 @@
     "@angular/router": "21.2.12",
     "@rx-angular/cdk": "21.0.0",
     "@rx-angular/template": "21.0.0",
+    "@tanstack/react-query": "^5.101.4",
     "marked": "^17.0.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router": "^8.3.0",
     "rxjs": "^7.8.2",
     "tslib": "^2.8.1"
   },
@@ -46,7 +53,12 @@
     "@angular/cli": "21.2.10",
     "@angular/compiler-cli": "21.2.12",
     "@playwright/test": "^1.58.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.2",
     "@types/marked": "^6.0.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
     "@vitest/ui": "^4.0.18",
     "husky": "^9.1.7",
     "jsdom": "^27.4.0",
@@ -54,9 +66,10 @@
     "playwright": "^1.58.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.3",
+    "vite": "^8.2.1",
     "vitest": "^4.0.18"
   },
   "lint-staged": {
-    "*.{ts,html,css,json,md}": "prettier --write"
+    "*.{ts,tsx,html,css,json,md}": "prettier --write"
   }
 }
