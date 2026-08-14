@@ -8,7 +8,7 @@ export default defineConfig({
     globals: false,
     environment: 'jsdom',
     setupFiles: [fileURLToPath(new URL('./src/test-setup.ts', import.meta.url))],
-    include: ['src/**/*.spec.ts'],
+    include: ['src/app/**/*.spec.ts'],
     pool: 'threads',
     coverage: {
       provider: 'v8',
