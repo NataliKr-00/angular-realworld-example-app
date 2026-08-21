@@ -3,6 +3,8 @@ import { AuthPage } from './core/auth/auth-page';
 import { RequireAuth, RequireGuest } from './core/auth/auth-guards';
 import { AppShell } from './core/layout/app-shell';
 import { HomePage } from './features/article/pages/home/home';
+import { ArticlePage } from './features/article/pages/article/article';
+import { EditorPage } from './features/article/pages/editor/editor';
 
 export const router = createBrowserRouter([
   {
@@ -22,8 +24,8 @@ export const router = createBrowserRouter([
         element: <RequireAuth />,
         children: [
           { path: 'settings', element: null },
-          { path: 'editor', element: null },
-          { path: 'editor/:slug', element: null },
+          { path: 'editor', element: <EditorPage /> },
+          { path: 'editor/:slug', element: <EditorPage /> },
         ],
       },
       { path: 'article/:slug', element: <ArticlePage /> },

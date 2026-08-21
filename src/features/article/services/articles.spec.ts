@@ -2,7 +2,15 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { API_BASE_URL } from '../../../core/api/api-client';
 import type { Article } from '../models/article.model';
 import type { ArticleListConfig } from '../models/article-list-config.model';
-import { favoriteArticle, fetchArticles, unfavoriteArticle } from './articles';
+import {
+  createArticle,
+  deleteArticle,
+  favoriteArticle,
+  fetchArticle,
+  fetchArticles,
+  unfavoriteArticle,
+  updateArticle,
+} from './articles';
 
 function jsonResponse(body: unknown, status = 200): Promise<Response> {
   return Promise.resolve(
@@ -129,6 +137,85 @@ describe('articles API', () => {
       expect(fetch).toHaveBeenCalledWith(
         `${API_BASE_URL}/articles/article-to-unfavorite/favorite`,
         expect.objectContaining({ method: 'DELETE' }),
+      );
+    });
+  });
+
+  describe('fetchArticle', () => {
+    it('fetches a single article by slug', async () => {
+      vi.mocked(fetch).mockReturnValue(jsonResponse({ article: mockArticle }));
+      const article = await fetchArticle('test-article');
+      expect(article).toEqual(mockArticle);
+      expect(fetch).toHaveBeenCalledWith(
+        `${API_BASE_URL}/articles/test-article`,
+        expect.objectContaining({ method: 'GET' }),
+      );
+    });
+
+    it('handles article not found', async () => {
+      vi.mocked(fetch).mockReturnValue(jsonResponse({ errors: { article: ['not found'] } }, 404));
+      await expect(fetchArticle('non-existent')).rejects.toMatchObject({ status: 404 });
+    });
+  });
+
+  describe('deleteArticle', () => {
+    it('deletes an article by slug', async () => {
+      vi.mocked(fetch).mockReturnValue(jsonResponse(null, 204));
+      await deleteArticle('article-to-delete');
+      expect(fetch).toHaveBeenCalledWith(
+        `${API_BASE_URL}/articles/article-to-delete`,
+        expect.objectContaining({ method: 'DELETE' }),
+      );
+    });
+
+    it('handles delete error', async () => {
+      vi.mocked(fetch).mockReturnValue(jsonResponse({ errors: { article: ['Cannot delete'] } }, 403));
+      await expect(deleteArticle('protected-article')).rejects.toMatchObject({ status: 403 });
+    });
+  });
+
+  describe('createArticle', () => {
+    it('creates a new article', async () => {
+      const newArticle: Partial<Article> = {
+        title: 'New Article',
+        description: 'New description',
+        body: 'New body',
+        tagList: ['new', 'test'],
+      };
+      vi.mocked(fetch).mockReturnValue(jsonResponse({ article: { ...mockArticle, ...newArticle } }));
+      const article = await createArticle(newArticle);
+      expect(article.title).toBe(newArticle.title);
+      expect(fetch).toHaveBeenCalledWith(
+        `${API_BASE_URL}/articles`,
+        expect.objectContaining({
+          method: 'POST',
+          body: JSON.stringify({ article: newArticle }),
+        }),
+      );
+    });
+
+    it('handles validation errors', async () => {
+      vi.mocked(fetch).mockReturnValue(jsonResponse({ errors: { title: ["can't be blank"] } }, 422));
+      await expect(createArticle({ title: '', description: '', body: '' })).rejects.toMatchObject({ status: 422 });
+    });
+  });
+
+  describe('updateArticle', () => {
+    it('updates an existing article', async () => {
+      const updates: Partial<Article> = {
+        slug: 'existing-article',
+        title: 'Updated Title',
+        description: 'Updated description',
+      };
+      vi.mocked(fetch).mockReturnValue(jsonResponse({ article: { ...mockArticle, ...updates } }));
+      const article = await updateArticle(updates);
+      expect(article.title).toBe(updates.title);
+      expect(fetch).toHaveBeenCalledWith(
+        `${API_BASE_URL}/articles/${updates.slug}`,
+        expect.objectContaining({
+          method: 'PUT',
+          body: JSON.stringify({ article: updates }),
+        }),
       );
     });
   });
