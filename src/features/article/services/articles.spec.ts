@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { API_BASE_URL } from '../../../core/api/api-client';
 import type { Article } from '../models/article.model';
 import type { ArticleListConfig } from '../models/article-list-config.model';
-import { favoriteArticle, fetchArticles, unfavoriteArticle } from './articles';
+import { deleteArticle, favoriteArticle, fetchArticle, fetchArticles, unfavoriteArticle } from './articles';
 
 function jsonResponse(body: unknown, status = 200): Promise<Response> {
   return Promise.resolve(
@@ -130,6 +130,39 @@ describe('articles API', () => {
         `${API_BASE_URL}/articles/article-to-unfavorite/favorite`,
         expect.objectContaining({ method: 'DELETE' }),
       );
+    });
+  });
+
+  describe('fetchArticle', () => {
+    it('fetches a single article by slug', async () => {
+      vi.mocked(fetch).mockReturnValue(jsonResponse({ article: mockArticle }));
+      const article = await fetchArticle('test-article');
+      expect(article).toEqual(mockArticle);
+      expect(fetch).toHaveBeenCalledWith(
+        `${API_BASE_URL}/articles/test-article`,
+        expect.objectContaining({ method: 'GET' }),
+      );
+    });
+
+    it('handles article not found', async () => {
+      vi.mocked(fetch).mockReturnValue(jsonResponse({ errors: { article: ['not found'] } }, 404));
+      await expect(fetchArticle('non-existent')).rejects.toMatchObject({ status: 404 });
+    });
+  });
+
+  describe('deleteArticle', () => {
+    it('deletes an article by slug', async () => {
+      vi.mocked(fetch).mockReturnValue(jsonResponse(null, 204));
+      await deleteArticle('article-to-delete');
+      expect(fetch).toHaveBeenCalledWith(
+        `${API_BASE_URL}/articles/article-to-delete`,
+        expect.objectContaining({ method: 'DELETE' }),
+      );
+    });
+
+    it('handles delete error', async () => {
+      vi.mocked(fetch).mockReturnValue(jsonResponse({ errors: { article: ['Cannot delete'] } }, 403));
+      await expect(deleteArticle('protected-article')).rejects.toMatchObject({ status: 403 });
     });
   });
 });

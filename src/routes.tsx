@@ -3,6 +3,7 @@ import { AuthPage } from './core/auth/auth-page';
 import { RequireAuth, RequireGuest } from './core/auth/auth-guards';
 import { AppShell } from './core/layout/app-shell';
 import { HomePage } from './features/article/pages/home/home';
+import { ArticlePage } from './features/article/pages/article/article';
 
 export const router = createBrowserRouter([
   {
@@ -26,7 +27,7 @@ export const router = createBrowserRouter([
           { path: 'editor/:slug', element: null },
         ],
       },
-      { path: 'article/:slug', element: null },
+      { path: 'article/:slug', element: <ArticlePage /> },
       { path: 'profile/:username', element: null },
       { path: 'profile/:username/favorites', element: null },
       { path: '*', element: null },
