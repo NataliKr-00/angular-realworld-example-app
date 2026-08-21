@@ -2,14 +2,15 @@ import { createBrowserRouter } from 'react-router';
 import { AuthPage } from './core/auth/auth-page';
 import { RequireAuth, RequireGuest } from './core/auth/auth-guards';
 import { AppShell } from './core/layout/app-shell';
+import { HomePage } from './features/article/pages/home/home';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <AppShell />,
     children: [
-      { index: true, element: null },
-      { path: 'tag/:tag', element: null },
+      { index: true, element: <HomePage /> },
+      { path: 'tag/:tag', element: <HomePage /> },
       {
         element: <RequireGuest />,
         children: [
