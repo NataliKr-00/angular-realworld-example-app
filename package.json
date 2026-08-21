@@ -40,6 +40,7 @@
     "@rx-angular/cdk": "21.0.0",
     "@rx-angular/template": "21.0.0",
     "@tanstack/react-query": "^5.101.4",
+    "dompurify": "^3.4.14",
     "marked": "^17.0.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

@@ -26,7 +26,7 @@ export const router = createBrowserRouter([
           { path: 'editor/:slug', element: null },
         ],
       },
-      { path: 'article/:slug', element: null },
+      { path: 'article/:slug', element: <ArticlePage /> },
       { path: 'profile/:username', element: null },
       { path: 'profile/:username/favorites', element: null },
       { path: '*', element: null },
