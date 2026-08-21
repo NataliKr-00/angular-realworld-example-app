@@ -8,7 +8,14 @@ export default defineConfig({
     name: 'react',
     globals: false,
     environment: 'jsdom',
-    include: ['src/core/**/*.spec.ts', 'src/core/**/*.spec.tsx', 'src/shared/**/*.spec.ts'],
+    include: [
+      'src/core/**/*.spec.ts',
+      'src/core/**/*.spec.tsx',
+      'src/shared/**/*.spec.ts',
+      'src/shared/**/*.spec.tsx',
+      'src/features/**/*.spec.ts',
+      'src/features/**/*.spec.tsx',
+    ],
     pool: 'threads',
   },
   resolve: {
